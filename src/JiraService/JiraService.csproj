@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>JiraService</Authors>
+    <Company></Company>
+	  <Owner></Owner>
+    <Description>Jira Service</Description>
+    <PackageTags>jira, atlassian, sdk</PackageTags>
+    <PackageReleaseNotes>Add Object Change Detector</PackageReleaseNotes>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <FileVersion>1.0.6.0</FileVersion>
+    <Version>1.0.6</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Deprecated_JiraService_Must_be_delete_Next_Checkin.cs" />
+    <Compile Remove="JiraServiceOLD.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atlassian.SDK" Version="12.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
+    <PackageReference Include="OpenSSL.PrivateKeyDecoder" Version="1.3.0" />
+  </ItemGroup>
+</Project>

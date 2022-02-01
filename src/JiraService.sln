@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JiraService", "JiraService\JiraService.csproj", "{72BEF1FE-9AEA-4D01-B2BE-EBA3A9E24A7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JiraService.Test", "JiraService.Test\JiraService.Test.csproj", "{2F708273-9F8C-4913-AF88-D3E7D7FF305B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{72BEF1FE-9AEA-4D01-B2BE-EBA3A9E24A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72BEF1FE-9AEA-4D01-B2BE-EBA3A9E24A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72BEF1FE-9AEA-4D01-B2BE-EBA3A9E24A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72BEF1FE-9AEA-4D01-B2BE-EBA3A9E24A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F708273-9F8C-4913-AF88-D3E7D7FF305B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F708273-9F8C-4913-AF88-D3E7D7FF305B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F708273-9F8C-4913-AF88-D3E7D7FF305B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F708273-9F8C-4913-AF88-D3E7D7FF305B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {279CB97D-A9BF-416A-8CF0-989C1C80420C}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://isd-aps2/tfs/isd-collection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Jira\\Jira.csproj
+		SccProjectName1 = Jira
+		SccLocalPath1 = Jira
+		SccProjectUniqueName2 = JiraService.Test\\JiraService.Test.csproj
+		SccProjectName2 = JiraService.Test
+		SccLocalPath2 = JiraService.Test
+	EndGlobalSection
+EndGlobal
