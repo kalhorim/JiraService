@@ -22,10 +22,10 @@ namespace JiraService.Test
         [ClassData(typeof(ChangeIssueInitializer))]
         public async void CreateDeleteIssue_jiraService(IJiraService jiraService, ChangeIssue change)
         {
-            var key = await jiraService.CreateIssue(change);
+            var key = await jiraService.Issue.Create(change);
             Debug.WriteLine(key);
             Assert.True(!string.IsNullOrEmpty(key));
-            var newBorn = await jiraService.GetIssue<ChangeIssue>(key);
+            var newBorn = await jiraService.Issue.Get<ChangeIssue>(key);
             Assert.True(newBorn.Equals(change));
             await DeleteIssue(jiraService, key);
         }
@@ -36,13 +36,13 @@ namespace JiraService.Test
         {
             var summary = " Update";
             var change = ChangeIssueInitializer.ChangeIssue.AddCustomFields();
-            await jiraService.CreateIssue(change);
-            change = await jiraService.GetIssue<ChangeIssue>(change.Key);
+            await jiraService.Issue.Create(change);
+            change = await jiraService.Issue.Get<ChangeIssue>(change.Key);
             change.Summary += summary;
             change.UpdateCustomFields();
-            var update = await jiraService.UpdateIssue(change);
+            var update = await jiraService.Issue.Update(change);
             Assert.True(update);
-            change = await jiraService.GetIssue<ChangeIssue>(change.Key);
+            change = await jiraService.Issue.Get<ChangeIssue>(change.Key);
             Assert.Contains(summary, change.Summary);
             Assert.True(change.IsUpdated());
             await DeleteIssue(jiraService, change.Key);
@@ -52,7 +52,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetIssue_jiraService(IJiraService jiraService, string key)
         {
-            var issue = await jiraService.GetIssue<ChangeIssue>(key);
+            var issue = await jiraService.Issue.Get<ChangeIssue>(key);
             Assert.NotNull(issue);
             Assert.NotNull(issue.ChangeType);
             Assert.Equal(key, issue.Key);
@@ -62,7 +62,7 @@ namespace JiraService.Test
         [ClassData(typeof(JiraServiceProvider))]
         public void GetIssues_jiraService(IJiraService jiraService)
         {
-            var issues = jiraService.GetIssues<ChangeIssue>("assignee in (membersOf(TDO))");
+            var issues = jiraService.Issue.Query<ChangeIssue>("assignee in (membersOf(TDO))");
             Assert.All(issues, a =>
             {
                 Assert.NotNull(a.Key);
@@ -75,7 +75,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetLink_jiraService(IJiraService jiraService, string key)
         {
-            var links = await jiraService.GetIssueLinks(key);
+            var links = await jiraService.LinkManagement.GetIssueLinks(key);
             Assert.All(links, a =>
             {
                 Assert.NotNull(a.LinkType);
@@ -89,7 +89,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetIssueAttachments_jiraService(IJiraService jiraService, string key)
         {
-            var attachments = await jiraService.GetIssueAttachments(key);
+            var attachments = await jiraService.Comment.GetIssueAttachments(key);
             Assert.All(attachments, a =>
             {
                 Assert.NotNull(a.User.Username);
@@ -101,7 +101,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetIssueComments_jiraService(IJiraService jiraService, string key)
         {
-            var comments = await jiraService.GetIssueComments(key);
+            var comments = await jiraService.Comment.GetIssueComments(key);
             Assert.All(comments, a =>
             {
                 Assert.NotNull(a.Body);
@@ -113,7 +113,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetLinks_jiraService(IJiraService jiraService, string key)
         {
-            var issues = await jiraService.GetLinks<IssueModel>(key, JiraLinkTypes.Cloners);
+            var issues = await jiraService.LinkManagement.GetLinks<IssueModel>(key, JiraLinkTypes.Cloners);
             Assert.All(issues, a =>
             {
                 Assert.NotNull(a.Key);
@@ -129,7 +129,7 @@ namespace JiraService.Test
             //TODO Need write a valid query
             throw new Exception("please introduce GetUsers query ");
 
-            //var links = await jiraService.GetUsers(key);
+            //var links = await jiraService.UserManagement.GetUsers(key);
             //Assert.All(links, a => { Assert.NotNull(a.LinkType); Assert.NotNull(a.InwardIssueKey); Assert.NotNull(a.OutwardIssueKey); });
         }
 
@@ -137,8 +137,8 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void Link_jiraService(IJiraService jiraService, string key)
         {
-            var newkey = await jiraService.CreateIssue(ChangeIssueInitializer.ChangeIssue.AddCustomFields());
-            var exec = await jiraService.Link(key, newkey, JiraLinkTypes.Duplicate);
+            var newkey = await jiraService.Issue.Create(ChangeIssueInitializer.ChangeIssue.AddCustomFields());
+            var exec = await jiraService.LinkManagement.Link(key, newkey, JiraLinkTypes.Duplicate);
             Assert.True(exec);
             await DeleteIssue(jiraService, newkey);
         }
@@ -151,8 +151,8 @@ namespace JiraService.Test
             {
                 IssueFakeExtentions.TextFileAttachment()
             };
-            await jiraService.AddAttachmentsToIssue(key, attachments);
-            var newAttachment = await jiraService.GetIssueAttachments(key);
+            await jiraService.Comment.AddAttachmentsToIssue(key, attachments);
+            var newAttachment = await jiraService.Comment.GetIssueAttachments(key);
             Assert.Contains(newAttachment, a => attachments[0].FileName.Equals(a.FileName));
         }
 
@@ -161,8 +161,8 @@ namespace JiraService.Test
         public async void AddCommentAsync_jiraService(IJiraService jiraService, string key)
         {
             var comment = new CommentModel {Body = "Test", User = new User("Kalahari")};
-            await jiraService.AddCommentAsync(key, comment);
-            var comments = await jiraService.GetIssueComments(key);
+            await jiraService.Comment.AddCommentAsync(key, comment);
+            var comments = await jiraService.Comment.GetIssueComments(key);
             Assert.Contains(comments, a => a.Body.Equals(comment.Body));
         }
 
@@ -179,8 +179,8 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void ChangeStatus_jiraService(IJiraService jiraService, string key)
         {
-            await jiraService.ChangeStatus(key, "Planning");
-            var issue = await jiraService.GetIssue<IssueModel>(key);
+            await jiraService.Issue.ChangeStatus(key, "Planning");
+            var issue = await jiraService.Issue.Get<IssueModel>(key);
             Assert.Equal("Planning", issue.Status);
         }
 
@@ -188,7 +188,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetCustomFields_jiraService(IJiraService jiraService, string key)
         {
-            var cfs = await jiraService.GetCustomFields();
+            var cfs = await jiraService.Schema.GetCustomFields();
             Assert.True(cfs.Any());
         }
 
@@ -198,12 +198,12 @@ namespace JiraService.Test
             IJiraService jiraService)
         {
             var bservices =
-                await jiraService.GetInsightFieldValues(
+                await jiraService.Schema.GetInsightFieldValues(
                     IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), 0, 100);
             Assert.NotEmpty(bservices);
             var firstbs = bservices.FirstOrDefault();
             var insight =
-                await jiraService.GetKeyOfValueInInsightField(
+                await jiraService.Schema.GetKeyOfValueInInsightField(
                     IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), firstbs.Name);
             Assert.Equal(firstbs, insight);
         }
@@ -212,7 +212,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void GetInsightJField_CheckValue_jiraService(IJiraService jiraService, string key)
         {
-            var issue = await jiraService.GetIssue<ChangeIssue>(key);
+            var issue = await jiraService.Issue.Get<ChangeIssue>(key);
             Assert.True(issue.Customer != null);
             Assert.True(issue.Customer.Value.Id != null);
             Assert.True(issue.Customer.Value.Key != null);
@@ -226,7 +226,7 @@ namespace JiraService.Test
             var change = new ChangeIssue();
             change.BusinessService = new InsightJField
             {
-                Value = (await jiraService.GetInsightFieldValues(change.GetFieldId(f => f.BusinessService), 0, 100))
+                Value = (await jiraService.Schema.GetInsightFieldValues(change.GetFieldId(f => f.BusinessService), 0, 100))
                     .LastOrDefault()
             };
             change.Customer = new InsightJField
@@ -235,7 +235,7 @@ namespace JiraService.Test
             await change.GetCustomFields().Where(w => w.Value is InsightJField).Select(s => (InsightJField) s.Value)
                 .ToList().ForEachAsync(async customField =>
                 {
-                    var value = await jiraService.GetKeyOfValueInInsightField(customField.Attribute.FieldId,
+                    var value = await jiraService.Schema.GetKeyOfValueInInsightField(customField.Attribute.FieldId,
                         customField.Value.Name);
                     Assert.Equal(value.Key, customField.Value.Key);
                 });
@@ -243,9 +243,9 @@ namespace JiraService.Test
 
         private static async Task DeleteIssue(IJiraService jiraService, string key)
         {
-            await jiraService.Delete(key);
+            await jiraService.Issue.Delete(key);
             var exception = await Assert.ThrowsAsync<ResourceNotFoundException>(
-                async () => await jiraService.GetIssue<ChangeIssue>(key));
+                async () => await jiraService.Issue.Get<ChangeIssue>(key));
             Assert.Contains("Issue Does Not Exist", exception.Message);
         }
     }

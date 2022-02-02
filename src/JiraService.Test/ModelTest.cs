@@ -75,7 +75,7 @@ namespace JiraService.Test
         [ClassData(typeof(IssuesDataset))]
         public async void Map_JiraIssueToIsseModel(IJiraService jiraService, string key)
         {
-            var changeIssue = await jiraService.GetIssue<ChangeIssue>(key);
+            var changeIssue = await jiraService.Issue.Get<ChangeIssue>(key);
             Assert.NotNull(changeIssue.BusinessService.Attribute);
             Assert.NotNull(changeIssue.ChangeType);
             Assert.NotNull(changeIssue.Customer.Value);
