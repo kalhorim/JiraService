@@ -230,7 +230,7 @@ namespace JiraService.Test
                     .LastOrDefault()
             };
             change.Customer = new InsightJField
-                {Value = new InsightField {Id = 265, Key = "CRM-265", Name = "Amal Bank"}};
+                {Value = new InsightField {Id = 265, Key = "CRM-265", Name = "Test data"}};
             change.SetAttributeInCustomFields();
             await change.GetCustomFields().Where(w => w.Value is InsightJField).Select(s => (InsightJField) s.Value)
                 .ToList().ForEachAsync(async customField =>
