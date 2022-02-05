@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using JiraService.JiraFields;
 using JiraService.Models;
+using JiraService.Test.Model.CustomFields;
 
 namespace JiraService.Test.Model
 {
@@ -52,6 +53,7 @@ namespace JiraService.Test.Model
                 {Value = new InsightField {Id = 265, Key = "CRM-265", Name = "Amal Bank"}};
             issue.PrimaryCustomer = new CascadeSelectOptionJField {Value = "Primary"};
             issue.ChangeType = new TextJField {Value = "Standard"};
+            issue.EpicLink = new EpicLinkJField { Value = "SRV-12325" };
             return issue;
         }
 

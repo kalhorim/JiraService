@@ -2,6 +2,7 @@
 using JiraService.Attributes;
 using JiraService.JiraFields;
 using JiraService.Models;
+using JiraService.Test.Model.CustomFields;
 
 namespace JiraService.Test.Model
 {
@@ -88,6 +89,8 @@ namespace JiraService.Test.Model
         [CustomField("Release CRM", defaultVal: "http://api/View/Tools/EntityDirect.aspx?etc=10023&no={0}")]
         public HyperLinkJField CrmReleases { get; set; }
 
+        [CustomField("Epic Link")]
+        public EpicLinkJField EpicLink { get; set; }
         #endregion
     }
 }
