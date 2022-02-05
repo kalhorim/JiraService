@@ -10,5 +10,6 @@ namespace JiraService.Contracts
     {
         Task<IEnumerable<JiraUser>> GetUsers(string query, JiraUserStatus userStatus = JiraUserStatus.Active, CancellationToken token = default);
         Task<bool> ImportUsers(IEnumerable<NewUser> users, CancellationToken token = default);
+        Task<IEnumerable<string>> GetGroups(int maxResults);
     }
 }

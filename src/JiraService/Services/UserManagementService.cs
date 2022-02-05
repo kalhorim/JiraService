@@ -8,6 +8,7 @@ using JiraService.Consts;
 using JiraService.Contracts;
 using JiraService.Models;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace JiraService.Services
 {
@@ -57,6 +58,16 @@ namespace JiraService.Services
             _logger.LogInformation("Import started.");
             if (errors.Any()) throw new Exception(string.Join(Environment.NewLine, errors.Select(err => $"{err.Key}\t{err.Value}")));
             return true;
+        }
+
+        public async Task<IEnumerable<string>> GetGroups(int maxResults)
+        {
+            var result = await _jiraClient.RestClient
+                .ExecuteRequestAsync(RestSharp.Method.GET, $"/rest/api/2/groups/picker?maxResults={maxResults}");
+
+            var groups = JArray.Parse(result["groups"].ToString());
+            var values = groups.Select(x => x["name"].ToString()).ToList();
+            return values;
         }
         #endregion
     }

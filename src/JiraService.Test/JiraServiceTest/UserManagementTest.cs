@@ -28,5 +28,13 @@ namespace JiraService.Test.JiraServiceTest
             //Assert.All(links, a => { Assert.NotNull(a.LinkType); Assert.NotNull(a.InwardIssueKey); Assert.NotNull(a.OutwardIssueKey); });
         }
 
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task GetGroups_jiraService(IJiraService jiraService)
+        {
+            var maxResult = 2;
+            var groups = await jiraService.UserManagement.GetGroups(maxResult);
+            Assert.True(groups != null && groups.Count() <= maxResult);
+        }
     }
 }
