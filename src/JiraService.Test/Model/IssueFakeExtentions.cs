@@ -66,6 +66,7 @@ namespace JiraService.Test.Model
                 new InsightJField {Value = new InsightField {Id = 265, Key = "CRM-265", Name = "Amal Bank"}});
             issue.SetCustomField("Primary Customer", new CascadeSelectOptionJField {Value = "Primary"});
             issue.SetCustomField("Change Type", new TextJField {Value = "Standard"});
+            issue.SetCustomField("Epic Link", new EpicLinkJField { Value = "SRV-12325" });
             return issue;
         }
 

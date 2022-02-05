@@ -28,7 +28,8 @@ namespace JiraService.Test.Model
                 {
                     ProjectKey = "SRV",
                     Type = "Change",
-                    Summary = "TEST"
+                    Summary = "TEST",
+                    Assignee = "jiraservice"
                 };
                 return change;
             }
