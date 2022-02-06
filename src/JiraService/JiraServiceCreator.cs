@@ -13,6 +13,7 @@ using JiraService.Services.FieldSerializers;
 using JiraService.Consts;
 using JiraService.JiraFields;
 using JiraService.Models;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace JiraService
 {
@@ -27,7 +28,11 @@ namespace JiraService
             _logger = logger;
             jsettings = new JiraRestClientSettings();
         }
-
+        public JiraServiceCreator()
+        {
+            _logger = new Logger<JiraServiceCreator>(new NullLoggerFactory());
+            jsettings = new JiraRestClientSettings();
+        }
 
         //TODO: Consider about open/close principle. 
         private JiraRestClientSettings AddCustomFieldSerializers()
