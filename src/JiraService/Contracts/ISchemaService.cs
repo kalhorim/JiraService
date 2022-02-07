@@ -8,6 +8,6 @@ namespace JiraService.Contracts
     {
         Task<IEnumerable<CustomField>> GetCustomFields();
         Task<InsightField> GetKeyOfValueInInsightField(string customFieldId, string optionValue);
-        Task<IEnumerable<InsightField>> GetInsightFieldValues(string fieldId, int start, int limit);
+        Task<IEnumerable<T>> GetFieldValues<T>(CustomFieldValuesRequest<T> request);
     }
 }

@@ -33,8 +33,20 @@ namespace JiraService.Extensions
         public static string GetFieldId<T>(Expression<Func<T, object>> selector) where T : IssueModel
         {
             var member = GetMember(selector);
-            var result =member.GetAttribute<CustomFieldAttribute>()?.FieldId;
+            var result = member.GetAttribute<CustomFieldAttribute>()?.FieldId;
             if (result == null) throw new Exception($"This Property'{member.Name}' does not have 'CustomFieldAttribute' annotation with 'FieldId'");
+            return result;
+        }
+
+        public static string GetFieldName<T>(this T issueModel, Expression<Func<T, object>> selector) where T : IssueModel
+        {
+            return GetFieldName(selector);
+        }
+        public static string GetFieldName<T>(Expression<Func<T, object>> selector) where T : IssueModel
+        {
+            var member = GetMember(selector);
+            var result = member.GetAttribute<CustomFieldAttribute>()?.Name;
+            if (result == null) throw new Exception($"This Property'{member.Name}' does not have 'CustomFieldAttribute' annotation with 'Name'");
             return result;
         }
     }
