@@ -24,7 +24,7 @@ namespace JiraService.JiraFields
         protected internal abstract string[] SetJiraValue { set; }
         protected Exception CastException(params string[] values)
         {
-            return new InvalidCastException($"Cast exception\nAttribute: {Attribute}\nValue: {string.Join(',', values)}\nType: {GetType().FullName}");
+            return new InvalidCastException($"Cast exception\nAttribute: {Attribute}\nValue: {string.Join(",", values)}\nType: {GetType().FullName}");
         }
     }
 }
