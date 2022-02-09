@@ -15,7 +15,7 @@ namespace JiraService.JiraFields
         //TODO: Use Regular expression, for more readable
         private void ExtractLink(string[] value)
         {
-            var data = value[0].Split("|");
+            var data = value[0].Split('|');
             if (value.Length > 1 || data.Length != 2 || !data[0].StartsWith("[") || !data[1].EndsWith("]"))
                 throw CastException(value);
             Value = data[0].Substring(1, data[0].Length-1);

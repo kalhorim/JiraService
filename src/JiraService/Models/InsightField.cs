@@ -17,7 +17,14 @@ namespace JiraService.Models
         }
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Key, Name);
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + Id.GetHashCode();
+                hash = hash * 23 + Key.GetHashCode();
+                hash = hash * 23 + Name.GetHashCode();
+                return hash;
+            }
         }
     }
 

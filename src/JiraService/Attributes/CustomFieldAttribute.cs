@@ -35,7 +35,13 @@ namespace JiraService.Attributes
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(FieldId, Name);
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + FieldId.GetHashCode();
+                hash = hash * 23 + Name.GetHashCode();
+                return hash;
+            }
         }
         public override string ToString()
         {

@@ -5,15 +5,15 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <PackageVersion>0.0.5</PackageVersion>
+    <PackageVersion>0.0.6</PackageVersion>
     <Title>Extension on Atlassian.SDK</Title>
     <PackageProjectUrl>https://github.com/kalhorim/JiraService</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/kalhorim/JiraService</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/kalhorim/JiraService</RepositoryUrl>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>JiraService</Authors>
     <Company></Company>
 	  <Owner></Owner>
@@ -21,9 +21,9 @@
     <PackageTags>jira, atlassian, sdk, extension</PackageTags>
     <PackageReleaseNotes>Add Object Change Detector</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.0.5</AssemblyVersion>
-    <FileVersion>0.0.5</FileVersion>
-    <Version>0.0.5</Version>
+    <AssemblyVersion>0.0.6</AssemblyVersion>
+    <FileVersion>0.0.6</FileVersion>
+    <Version>0.0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

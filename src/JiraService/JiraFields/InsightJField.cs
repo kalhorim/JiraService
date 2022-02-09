@@ -20,7 +20,7 @@ namespace JiraService.JiraFields
             var key = System.Text.RegularExpressions.Regex.Match(value, regEx).Value.Trim();
             key = key.Substring(1, key.Length - 2);
             int id;
-            if (int.TryParse(key.Split("-")[1], out id))
+            if (int.TryParse(key.Split('-')[1], out id))
                 return new InsightField { Name = newValue, Key = key, Id = id };
             return new InsightField { Name = newValue, Key = key, Id = null };
         }
