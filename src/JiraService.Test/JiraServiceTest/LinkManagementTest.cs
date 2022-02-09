@@ -53,6 +53,16 @@ namespace JiraService.Test.JiraServiceTest
             await DeleteIssue(jiraService, newkey);
         }
 
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
+        public async void CustomLink_jiraService(IJiraService jiraService, string key)
+        {
+            var newkey = await jiraService.Issue.Create(ChangeIssueInitializer.ChangeIssue.AddCustomFields());
+            var exec = await jiraService.LinkManagement.Link(key, newkey, CustomLinkTypes.AdditionalCustomer);
+            Assert.True(exec);
+            await DeleteIssue(jiraService, newkey);
+        }
+
         private static async Task DeleteIssue(IJiraService jiraService, string key)
         {
             await jiraService.Issue.Delete(key);
