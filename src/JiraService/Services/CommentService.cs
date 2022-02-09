@@ -19,11 +19,15 @@ namespace JiraService.Services
         #region Public Methods
         public async Task AddCommentAsync(string issueKey, CommentModel comment, CancellationToken token = default)
         {
-            var issue = await _jiraClient.Issues.GetIssueAsync(issueKey);
+            var issue = await _jiraClient.Issues.GetIssueAsync(issueKey, token);
 
             await AddCommentAsync(issue, comment, token);
         }
-
+        public async Task AddRemoteLinkAsync(string issueKey, string remoteUrl, string title, string summary = null, CancellationToken token = default)
+        {
+            var issue = await _jiraClient.Issues.GetIssueAsync(issueKey, token);
+            await issue.AddRemoteLinkAsync(remoteUrl,  title, summary);
+        }
         public async Task AddAttachmentsToIssue(string issueKey, IEnumerable<AttachmentInfo> attachmentInfos, CancellationToken token = default)
         {
             var issue = await _jiraClient.Issues.GetIssueAsync(issueKey, token);
@@ -33,14 +37,14 @@ namespace JiraService.Services
         public async Task<IEnumerable<AttachmentInfo>> GetIssueAttachments(string issueKey, CancellationToken token = default)
         {
             var issue = await _jiraClient.Issues.GetIssueAsync(issueKey, token);
-            var attachments = await issue.GetAttachmentsAsync();
+            var attachments = await issue.GetAttachmentsAsync(token);
             return attachments.Select(Mapper.Map);
         }
 
         public async Task<IEnumerable<CommentModel>> GetIssueComments(string issueKey, CancellationToken token = default)
         {
-            var issue = await _jiraClient.Issues.GetIssueAsync(issueKey);
-            var comments = await issue.GetCommentsAsync();
+            var issue = await _jiraClient.Issues.GetIssueAsync(issueKey, token);
+            var comments = await issue.GetCommentsAsync(token);
             return comments.Select(Mapper.Map);
         }
         #endregion
@@ -50,12 +54,10 @@ namespace JiraService.Services
         {
             if (attachmentInfos == null)
                 return;
-            var attachments = attachmentInfos?.Select(x => new Atlassian.Jira.UploadAttachmentInfo(x.FileName, x.DataBytes))?.ToArray();
-            if (attachments != null)
-            {
-                await issue.AddAttachmentAsync(attachments);
-            }
-            foreach (var comment in attachmentInfos)
+            var enumerable = attachmentInfos as AttachmentInfo[] ?? attachmentInfos.ToArray();
+            var attachments = enumerable?.Select(x => new Atlassian.Jira.UploadAttachmentInfo(x.FileName, x.DataBytes))?.ToArray();
+            await issue.AddAttachmentAsync(attachments);
+            foreach (var comment in enumerable)
             {
 
                 var cmnt = new Atlassian.Jira.Comment()
