@@ -5,7 +5,7 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <PackageVersion>0.0.7-Alpha</PackageVersion>
+    <PackageVersion>0.0.8</PackageVersion>
     <Title>Extension on Atlassian.SDK</Title>
     <PackageProjectUrl>https://github.com/kalhorim/JiraService</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/kalhorim/JiraService</PackageLicenseUrl>
