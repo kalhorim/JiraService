@@ -49,6 +49,22 @@ namespace JiraService.Test.JiraServiceTest
 
         [Theory]
         [ClassData(typeof(IssuesDataset))]
+        public async void UpdateFixVersion_jiraService(IJiraService jiraService, string key)
+        {
+            var getVersionRequest = new VersionValuesRequest("SRV");
+            var allVersions = await jiraService.Schema.GetFieldValues(getVersionRequest);
+            
+            var updatingIssue = await jiraService.Issue.Get<ChangeIssue>(key);
+            var newVersions = allVersions.Where(x => !updatingIssue.FixVersions.Contains(x)).Take(2).ToArray();
+            updatingIssue.FixVersions = newVersions;
+            await jiraService.Issue.Update(updatingIssue);
+
+            var updatedIssue = await jiraService.Issue.Get<ChangeIssue>(key);
+            Assert.True(updatedIssue.FixVersions.All(x => newVersions.Contains(x)));
+        }
+
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
         public async void GetIssue_jiraService(IJiraService jiraService, string key)
         {
             var issue = await jiraService.Issue.Get<ChangeIssue>(key);

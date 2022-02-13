@@ -20,5 +20,6 @@ namespace JiraService.Models
         public IEnumerable<CommentModel> Comments { get; set; }
         public IEnumerable<AttachmentInfo> Attachments { get; set; }
         public LogWork LogWork { get; set; }
+        public string[] FixVersions { get; set; }
     }
 }
