@@ -26,5 +26,10 @@ namespace JiraService.JiraFields
         {
             return new InvalidCastException($"Cast exception\nAttribute: {Attribute}\nValue: {string.Join(",", values)}\nType: {GetType().FullName}");
         }
+
+        internal virtual void Assign(Atlassian.Jira.Issue issue)
+        {
+            issue[Attribute.Name] = GetJiraValue;
+        }
     }
 }

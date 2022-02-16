@@ -17,7 +17,7 @@ namespace JiraService.Services
             issue = Map(issueModel, issue);
             issueModel.GetCustomFields().Where(w => w.Value != null && !(w.Value is DefaultJField)).ToList().ForEach(field =>
                 {
-                    issue[field.Key] = field.Value.GetJiraValue;
+                    field.Value.Assign(issue);
                 });
             return issue;
         }

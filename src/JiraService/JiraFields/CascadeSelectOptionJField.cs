@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace JiraService.JiraFields
 {
@@ -8,22 +9,30 @@ namespace JiraService.JiraFields
 
         protected internal override string[] SetJiraValue { set => Value = string.Join("", value); }
 
-        protected internal override string GetJiraValue => prepareData();
+        protected internal override string GetJiraValue => Value;
 
-
-        //TODO: Need a Review and a proposal
-        private string prepareData()
+        internal override void Assign(Atlassian.Jira.Issue issue)
         {
-            var val = Value;
-                bool isCascadeSelectOption = Value.Contains(" - ");
-                if (isCascadeSelectOption)
+            bool isParentChildCascadeSelectOption = Value.Contains(" - ");
+            if (isParentChildCascadeSelectOption)
+            {
+                var splitedValue = Value.Split(new string[] { " - " }, StringSplitOptions.None);
+                var parent = splitedValue[0];
+                var child = splitedValue[1];
+                issue.CustomFields.AddCascadingSelectField(Attribute.Name, parent, child);
+            }
+            else
+            {
+                var customFieldId = issue.CustomFields.SingleOrDefault(x => x.Name == Attribute.Name)?.Id;
+                if (!string.IsNullOrEmpty(customFieldId))
                 {
-                    var splitedValue = Value.Split(new string[] { " - " }, StringSplitOptions.None);
-                    var parent = splitedValue[0];
-                    var child = splitedValue[1];
-                    //issue.CustomFields.AddCascadingSelectField(attribute.Name, parent, child);
+                    issue[Attribute.Name] = Value;
                 }
-            return val;
+                else
+                {
+                    issue.CustomFields.AddCascadingSelectField(Attribute.Name, Value);
+                }
+            }
         }
     }
 }
