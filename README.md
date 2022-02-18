@@ -61,7 +61,7 @@ If you want your own custom field like **EpicLink** creates a new type that inhe
 ```
 And now use your type easily in all of your projects it is type-safe and testable.
 ```cs
-// inital data
+// initializing
 var change = new ChangeIssue();
 change.ProjectKey = "test";
 change.Type = "test";
