@@ -107,5 +107,5 @@ Contributions are always welcome!
 
 ## Feedback
 
-If you have any feedback, please add a new issue.
+Please add a new issue or add a new discussion if you have any feedback.
 
