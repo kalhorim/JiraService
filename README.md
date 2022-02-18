@@ -61,7 +61,11 @@ If you want your own custom field like **EpicLink** creates a new type that inhe
 ```
 And now use your type easily in all of your projects it is type-safe and testable.
 ```cs
-// initializing
+
+// initializing jiraService (GetJiraService has a contract **IJiraService** to make it possible to use mock in test projects.)
+var jiraService = new JiraServiceCreator().GetJiraService(setting.HOST, setting.USERNAME, setting.PASSWORD);
+
+// initializing Model
 var change = new ChangeIssue();
 change.ProjectKey = "test";
 change.Type = "test";
