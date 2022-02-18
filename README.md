@@ -84,8 +84,8 @@ await jiraService.Issue.Delete(key);
 
 ## Authors
 
-- [@Mohammad Tajik](https://github.com/mtss92)
-- [@Mohammad Kalhori](https://github.com/kalhorim)
+- [Mohammad Tajik](https://github.com/mtss92)
+- [Mohammad Kalhori](https://github.com/kalhorim)
 
 
 ## Contributing
