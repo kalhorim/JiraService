@@ -19,7 +19,15 @@ namespace JiraService.JiraFields
                 var splitedValue = Value.Split(new string[] { " - " }, StringSplitOptions.None);
                 var parent = splitedValue[0];
                 var child = splitedValue[1];
-                issue.CustomFields.AddCascadingSelectField(Attribute.Name, parent, child);
+                var customFieldId = issue.CustomFields.SingleOrDefault(x => x.Name == Attribute.Name)?.Id;
+                if (!string.IsNullOrEmpty(customFieldId))
+                {
+                    issue.CustomFields[Attribute.Name].Values = new string[] { parent, child};
+                }
+                else
+                {
+                    issue.CustomFields.AddCascadingSelectField(Attribute.Name, parent, child);
+                }
             }
             else
             {
