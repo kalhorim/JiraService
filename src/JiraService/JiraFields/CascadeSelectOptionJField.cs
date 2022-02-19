@@ -7,7 +7,7 @@ namespace JiraService.JiraFields
     {
         public string Value;
 
-        protected internal override string[] SetJiraValue { set => Value = string.Join("", value); }
+        protected internal override string[] SetJiraValue { set => Value = string.Join(" - ", value); }
 
         protected internal override string GetJiraValue => Value;
 
