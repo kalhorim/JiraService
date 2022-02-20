@@ -28,13 +28,13 @@ namespace JiraService.Services
             //TODO: Implement Caching
 
             var request = new InsightFieldValuesRequest(customFieldId, 0, 1000);
-            var values = await GetFieldValues(request).ConfigureAwait(false);
+            var values = await GetFieldValues(request);
             return values.SingleOrDefault(s => s.Name == optionValue);
         }
 
         public async Task<IEnumerable<T>> GetFieldValues<T>(CustomFieldValuesRequest<T> request)
         {
-            return await request.GetValues(_jiraClient).ConfigureAwait(false);
+            return await request.GetValues(_jiraClient);
         }
         #endregion
     }
