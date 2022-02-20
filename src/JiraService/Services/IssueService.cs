@@ -105,28 +105,12 @@ namespace JiraService.Services
 
         public async Task SetTrackingTime(string issueKey, string originalEstimate, string remainingEstimate, CancellationToken token = default)
         {
-
             var editList = new List<object>();
 
-            string original = "";
-            string remaining = "";
-
-            if (!string.IsNullOrEmpty(originalEstimate))
-            {
-                original = $"{originalEstimate}h";
-            }
-
-            if (!string.IsNullOrEmpty(remainingEstimate))
-            {
-                remaining = $"{remainingEstimate}h";
-            }
-
-
-            editList.Add(new { edit = new { originalEstimate = original, remainingEstimate = remaining } });
+            editList.Add(new { edit = new { originalEstimate = originalEstimate, remainingEstimate = remainingEstimate } });
             var myObject = new { update = new { timetracking = editList } };
 
             await _jiraClient.RestClient.ExecuteRequestAsync(RestSharp.Method.PUT, $"/rest/api/2/issue/{issueKey}", myObject, token);
-
         }
         #endregion
 

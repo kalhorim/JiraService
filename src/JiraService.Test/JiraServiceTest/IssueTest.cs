@@ -49,6 +49,18 @@ namespace JiraService.Test.JiraServiceTest
 
         [Theory]
         [ClassData(typeof(IssuesDataset))]
+        public async void UpdateIssueTimeTracking_jiraService(IJiraService jiraService, string key)
+        {
+            var issue = await jiraService.Issue.Get<ChangeIssue>(key);
+            issue.OriginalEstimate = "13";
+            var update = await jiraService.Issue.Update(issue);
+            Assert.True(update);
+            issue = await jiraService.Issue.Get<ChangeIssue>(key);
+            Assert.True(issue.OriginalEstimate == "13h");
+        }
+
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
         public async void UpdateFixVersion_jiraService(IJiraService jiraService, string key)
         {
             var getVersionRequest = new VersionValuesRequest("SRV");
