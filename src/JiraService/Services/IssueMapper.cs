@@ -55,7 +55,15 @@ namespace JiraService.Services
             toIssue.Summary = fromissue.Summary;
             toIssue.Description = fromissue.Description;
             toIssue.Assignee = fromissue.Assignee;
-            if(fromissue.FixVersions != null)
+            if (fromissue.Labels != null)
+            {
+                toIssue.Labels.Clear();
+                foreach (var label in fromissue.Labels)
+                {
+                    toIssue.Labels.Add(label);
+                }
+            }
+            if (fromissue.FixVersions != null)
             {
                 toIssue.FixVersions.Clear();
                 foreach (var version in fromissue.FixVersions)
@@ -83,6 +91,7 @@ namespace JiraService.Services
             issueModel.Assignee = issue.Assignee;
             issueModel.Key = issue.Key.Value;
             issueModel.FixVersions = issue.FixVersions.Select(x => x.Name).ToArray();
+            issueModel.Labels = issue.Labels.ToArray();
 
             return issueModel;
         }

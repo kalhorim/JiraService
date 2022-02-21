@@ -77,6 +77,18 @@ namespace JiraService.Test.JiraServiceTest
 
         [Theory]
         [ClassData(typeof(IssuesDataset))]
+        public async void UpdateLabel_jiraService(IJiraService jiraService, string key)
+        {
+            var updatingIssue = await jiraService.Issue.Get<ChangeIssue>(key);
+            updatingIssue.Labels = new string[] {  "test" };
+            await jiraService.Issue.Update(updatingIssue);
+
+            var updatedIssue = await jiraService.Issue.Get<ChangeIssue>(key);
+            Assert.Contains("test", updatedIssue.Labels);
+        }
+
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
         public async void GetIssue_jiraService(IJiraService jiraService, string key)
         {
             var issue = await jiraService.Issue.Get<ChangeIssue>(key);

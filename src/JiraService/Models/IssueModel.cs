@@ -21,5 +21,6 @@ namespace JiraService.Models
         public IEnumerable<AttachmentInfo> Attachments { get; set; }
         public LogWork LogWork { get; set; }
         public string[] FixVersions { get; set; }
+        public string[] Labels { get; set; }
     }
 }
