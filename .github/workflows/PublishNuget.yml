@@ -6,7 +6,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET
@@ -14,13 +14,11 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
-      working-directory: ./src/JiraService/
+      run: dotnet restore src/JiraService.sln
     - name: Build
-      run: dotnet build --configuration Release --no-restore
-      working-directory: ./src/JiraService/
+      run: dotnet build --no-restore src/JiraService.sln
     - name: Publish  
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-        PROJECT_FILE_PATH: src/JiraService/JiraService.csproj  
+        PROJECT_FILE_PATH: src/AtlassianAssistance.JiraService/AtlassianAssistance.JiraService.csproj  
         NUGET_KEY: ${{secrets.NUGET_API_KEY}} 
