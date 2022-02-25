@@ -14,12 +14,12 @@ This project is added some extra features to help c# developers that they used A
 
 ## Installation
 
-Install JiraService with Nuget
+Install AtlassianAssistance.JiraService with Nuget
 
 ```bash
-  Install-Package JiraService
+  Install-Package AtlassianAssistance.JiraService
   or
-  dotnet add package JiraService
+  dotnet add package AtlassianAssistance.JiraService
 ```
     
 
