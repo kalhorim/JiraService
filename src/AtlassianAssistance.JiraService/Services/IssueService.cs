@@ -267,7 +267,7 @@ namespace AtlassianAssistance.JiraService.Services
                 var attribute = customField.Attribute;
                 var keyOfValues = new List<string>();
 
-                var keyOfValue = await _schemaService.GetKeyOfValueInInsightField(attribute.FieldId, customField.Value.Name);
+                var keyOfValue = await _schemaService.GetKeyOfValueInInsightField(attribute.FieldTypeId, customField.Value.Name);
                 keyOfValues.Add("{\"key\" : \"" + customField.Value.Key + "\"}");
 
                 var customFieldIdentifier = jiraAllCustomFields[attribute.Name]?.Id;

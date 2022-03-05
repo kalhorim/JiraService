@@ -74,7 +74,7 @@ namespace AtlassianAssistance.JiraService.Test.Model
 
         [CustomField("Change Type")] public TextJField ChangeType { get; set; }
 
-        [CustomField("Business Service", "customfield_10900")]
+        [CustomField("Business Service", "102")]
         public InsightJField BusinessService { get; set; }
 
         [CustomField("Enhancement")] public CascadeSelectOptionJField Enhancement { get; set; }

@@ -30,7 +30,7 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         public async void GetInsightFieldValues_GetKeyOfValueInInsightField_Compare_jiraService(
             IJiraService jiraService)
         {
-            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), 0, 100);
+            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService));
             var bservices = await jiraService.Schema.GetFieldValues(request);
             Assert.NotEmpty(bservices);
             var firstbs = bservices.FirstOrDefault();
@@ -45,7 +45,7 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         public async void GetInsightFieldValues_CheckAfterAssign_jiraService(IJiraService jiraService)
         {
             var change = new ChangeIssue();
-            var request = new InsightFieldValuesRequest(change.GetFieldId(f => f.BusinessService), 0, 100);
+            var request = new InsightFieldValuesRequest(change.GetFieldId(f => f.BusinessService));
             change.BusinessService = new InsightJField
             {
                 Value = (await jiraService.Schema.GetFieldValues(request)).LastOrDefault()
@@ -56,7 +56,7 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
             await change.GetCustomFields().Where(w => w.Value is InsightJField).Select(s => (InsightJField)s.Value)
                 .ToList().ForEachAsync(async customField =>
                 {
-                    var value = await jiraService.Schema.GetKeyOfValueInInsightField(customField.Attribute.FieldId,
+                    var value = await jiraService.Schema.GetKeyOfValueInInsightField(customField.Attribute.FieldTypeId,
                         customField.Value.Name);
                     Assert.Equal(value.Key, customField.Value.Key);
                 });
@@ -66,7 +66,7 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         [ClassData(typeof(JiraServiceProvider))]
         public async void GetInsightFieldValues_jiraService(IJiraService jiraService)
         {
-            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), 0, 100);
+            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService));
             var bservices = await jiraService.Schema.GetFieldValues(request);
             Assert.NotEmpty(bservices);
         }
@@ -75,7 +75,7 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         [ClassData(typeof(JiraServiceProvider))]
         public async void GetInsightFieldValues_InlcudeAttributes_jiraService(IJiraService jiraService)
         {
-            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), 0, 100, true);
+            var request = new InsightFieldValuesRequest(IssueModelExtensions.GetFieldId<ChangeIssue>(f => f.BusinessService), true);
             var bservices = await jiraService.Schema.GetFieldValues(request);
             Assert.NotEmpty(bservices);
         }

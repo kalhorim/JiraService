@@ -11,63 +11,66 @@ namespace AtlassianAssistance.JiraService.Models
 {
     public class InsightFieldValuesRequest : CustomFieldValuesRequest<InsightField>
     {
-        private readonly string fieldId;
-        private readonly int start;
-        private readonly int limit;
-        private readonly bool includeAttribus;
+        private readonly string fieldTypeId;
+        private readonly bool includeAttributs;
 
-        public InsightFieldValuesRequest(string fieldId, int start, int limit, bool includeAttribus = false)
+        public InsightFieldValuesRequest(string fieldTypeId, bool includeAttributs = false)
         {
-            this.fieldId = fieldId;
-            this.start = start;
-            this.limit = limit;
-            this.includeAttribus = includeAttribus;
+            this.fieldTypeId = fieldTypeId;
+            this.includeAttributs = includeAttributs;
         }
 
         public override async Task<IEnumerable<InsightField>> GetValues(Jira jiraClient)
         {
-            var myObject = new { start, limit };
+            var fieldValues = new List<InsightField>();
 
-            var result = await jiraClient.RestClient
-                .ExecuteRequestAsync(RestSharp.Method.POST, $"/rest/insight/1.0/customfield/default/{RemovePrefix(fieldId)}/objects", myObject);
+            var objectTypeId = fieldTypeId;
+            var page = 1;
+            var resultsPerPage = 1000;
 
-            var objects = Newtonsoft.Json.Linq.JArray.Parse(result["objects"].ToString());
-            var values = objects.Select(Mapper.Map).ToList();
-
-            if (includeAttribus)
+            do
             {
-                await IncludeInsightFieldValueAttribus(jiraClient, values);
-            }
-
-            return values;
-        }
-
-        #region Private Methods
-        private async Task IncludeInsightFieldValueAttribus(Jira jiraClient, List<InsightField> values)
-        {
-            foreach (var value in values)
-            {
+                var myObject = new { objectTypeId, page, resultsPerPage, includeAttributs };
                 var result = await jiraClient.RestClient
-                                .ExecuteRequestAsync(RestSharp.Method.GET, $"/rest/insight/1.0/object/{value.Id}/attributes");
+                    .ExecuteRequestAsync(RestSharp.Method.POST, $"/rest/insight/1.0/object/navlist", myObject);
 
-                var objects = JArray.Parse(result.ToString());
-                value.Attributes = objects.Select(x =>
-                    new InsightFieldAttribute
+                var objects = JArray.Parse(result["objectEntries"].ToString());
+                if (objects.Count == 0)
+                    break;
+
+                var values = objects.Select(x =>
+                    new InsightField
                     {
                         Id = (int)x["id"],
-                        TypeId = (int)x["objectTypeAttribute"]["id"],
-                        TypeName = x["objectTypeAttribute"]["name"].ToString(),
-                        DisplayValues = JArray.Parse(x["objectAttributeValues"].ToString())
-                                                    .Select(p => p["displayValue"].ToString())
+                        Name = x["label"].ToString(),
+                        Key = x["objectKey"].ToString(),
+                        AttributesObject = x["attributes"] == null ? null : JArray.Parse(x["attributes"].ToString())
                     })
                     .ToList();
-            }
-        }
 
-        private string RemovePrefix(string fieldname)
-        {
-            return fieldname.Replace("customfield_", "");
+                if (includeAttributs)
+                {
+                    foreach (var value in values)
+                    {
+                        value.Attributes = value.AttributesObject?.Select(x =>
+                            new InsightFieldAttribute
+                            {
+                                Id = (int)x["id"],
+                                TypeId = (int)x["objectTypeAttribute"]["id"],
+                                TypeName = x["objectTypeAttribute"]["name"].ToString(),
+                                DisplayValues = JArray.Parse(x["objectAttributeValues"].ToString())
+                                                            .Select(p => p["displayValue"].ToString())
+                                                            .ToArray()
+                            })
+                            ?.ToList();
+                    }
+                }
+
+                fieldValues.AddRange(values);
+                page++;
+            } while (true);
+
+            return fieldValues;
         }
-        #endregion
     }
 }

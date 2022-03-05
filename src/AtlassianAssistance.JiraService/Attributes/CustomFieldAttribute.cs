@@ -11,16 +11,16 @@ namespace AtlassianAssistance.JiraService.Attributes
                    Inherited = true)]
     public sealed class CustomFieldAttribute : Attribute, IEquatable<Atlassian.Jira.CustomFieldValue>
     {
-        public CustomFieldAttribute(string name, string fieldId = "", string defaultVal = null)
+        public CustomFieldAttribute(string name, string fieldTypeId = "", string defaultVal = null)
         {
             this.Name = name;
-            this.FieldId = fieldId;
+            this.FieldTypeId = fieldTypeId;
             this.DefaultVal = defaultVal;
         }
 
         public string Name { get; }
 
-        public string FieldId { get; }
+        public string FieldTypeId { get; }
 
         public string DefaultVal { get; }
 
@@ -28,7 +28,7 @@ namespace AtlassianAssistance.JiraService.Attributes
         {
             return cfv != null 
                    && (
-                       cfv.Id.Equals(FieldId, StringComparison.OrdinalIgnoreCase) 
+                       cfv.Id.Equals(FieldTypeId, StringComparison.OrdinalIgnoreCase) 
                        || cfv.Name.Equals(Name, StringComparison.OrdinalIgnoreCase)
                        );
         }
@@ -38,14 +38,14 @@ namespace AtlassianAssistance.JiraService.Attributes
             unchecked
             {
                 int hash = 17;
-                hash = hash * 23 + FieldId.GetHashCode();
+                hash = hash * 23 + FieldTypeId.GetHashCode();
                 hash = hash * 23 + Name.GetHashCode();
                 return hash;
             }
         }
         public override string ToString()
         {
-            return $"FieldId:{FieldId}\tName:{Name}\tDefaultVal:{DefaultVal}";
+            return $"FieldId:{FieldTypeId}\tName:{Name}\tDefaultVal:{DefaultVal}";
         }
     }
 

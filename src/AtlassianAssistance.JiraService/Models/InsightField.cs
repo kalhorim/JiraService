@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace AtlassianAssistance.JiraService.Models
         public string Key { get; set; }
         public string Name { get; set; }
         public IEnumerable<InsightFieldAttribute> Attributes { get; set; }
+        internal JArray AttributesObject { get; set; }
 
         public bool Equals(InsightField other)
         {

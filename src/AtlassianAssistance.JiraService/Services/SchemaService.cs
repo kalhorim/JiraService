@@ -23,11 +23,11 @@ namespace AtlassianAssistance.JiraService.Services
             return customFields;
         }
 
-        public async Task<InsightField> GetKeyOfValueInInsightField(string customFieldId, string optionValue)
+        public async Task<InsightField> GetKeyOfValueInInsightField(string customFieldTypeId, string optionValue)
         {
             //TODO: Implement Caching
 
-            var request = new InsightFieldValuesRequest(customFieldId, 0, 1000);
+            var request = new InsightFieldValuesRequest(customFieldTypeId);
             var values = await GetFieldValues(request);
             return values.SingleOrDefault(s => s.Name == optionValue);
         }

@@ -33,7 +33,7 @@ namespace AtlassianAssistance.JiraService.Extensions
         public static string GetFieldId<T>(Expression<Func<T, object>> selector) where T : IssueModel
         {
             var member = GetMember(selector);
-            var result = member.GetAttribute<CustomFieldAttribute>()?.FieldId;
+            var result = member.GetAttribute<CustomFieldAttribute>()?.FieldTypeId;
             if (result == null) throw new Exception($"This Property'{member.Name}' does not have 'CustomFieldAttribute' annotation with 'FieldId'");
             return result;
         }
