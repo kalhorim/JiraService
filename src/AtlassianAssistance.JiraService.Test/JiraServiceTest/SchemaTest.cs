@@ -97,5 +97,37 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
             var values = await jiraService.Schema.GetFieldValues(request);
             Assert.NotEmpty(values);
         }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task CreateReleaseType_Test(IJiraService jiraService)
+        {
+            var obj = new ReleaseTypeInsightObject()
+            {
+                Name = "My Test",
+                MustHaveRFC = false,
+                CustomerFree = true,
+                Category = "Client",
+                CiClasses = new InsightObjectArrayJField() { Values = new string[] { "Banco", "Card" } }
+            };
+            string objectKey = await jiraService.Schema.CreateInsightObject(obj);
+            Assert.NotNull(objectKey);
+        }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task UpdateReleaseType_Test(IJiraService jiraService)
+        {
+            var obj = new ReleaseTypeInsightObject()
+            {
+                Name = "My Test",
+                MustHaveRFC = false,
+                CustomerFree = true,
+                Category = "Banco",
+                CiClasses = new InsightObjectArrayJField() { Values = new string[] { "Banco" } }
+            };
+            string objectKey = await jiraService.Schema.UpdateInsightObject(obj, "CMDB-630415");
+            Assert.NotNull(objectKey);
+        }
     }
 }

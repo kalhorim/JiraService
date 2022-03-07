@@ -12,12 +12,12 @@ namespace AtlassianAssistance.JiraService.Models
     public class InsightFieldValuesRequest : CustomFieldValuesRequest<InsightField>
     {
         private readonly string fieldTypeId;
-        private readonly bool includeAttributs;
+        private readonly bool includeAttributes;
 
         public InsightFieldValuesRequest(string fieldTypeId, bool includeAttributs = false)
         {
             this.fieldTypeId = fieldTypeId;
-            this.includeAttributs = includeAttributs;
+            this.includeAttributes = includeAttributs;
         }
 
         public override async Task<IEnumerable<InsightField>> GetValues(Jira jiraClient)
@@ -30,7 +30,7 @@ namespace AtlassianAssistance.JiraService.Models
 
             do
             {
-                var myObject = new { objectTypeId, page, resultsPerPage, includeAttributs };
+                var myObject = new { objectTypeId, page, resultsPerPage, includeAttributes };
                 var result = await jiraClient.RestClient
                     .ExecuteRequestAsync(RestSharp.Method.POST, $"/rest/insight/1.0/object/navlist", myObject);
 
@@ -48,7 +48,7 @@ namespace AtlassianAssistance.JiraService.Models
                     })
                     .ToList();
 
-                if (includeAttributs)
+                if (includeAttributes)
                 {
                     foreach (var value in values)
                     {
