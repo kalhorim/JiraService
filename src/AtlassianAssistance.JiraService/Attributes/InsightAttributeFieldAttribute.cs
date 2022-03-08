@@ -4,6 +4,7 @@ using System.Text;
 
 namespace AtlassianAssistance.JiraService.Attributes
 {
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class InsightAttributeFieldAttribute : Attribute
     {
         private readonly int objectTypeAttributeId;
