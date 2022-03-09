@@ -97,5 +97,45 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
             var values = await jiraService.Schema.GetFieldValues(request);
             Assert.NotEmpty(values);
         }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task CreateReleaseType_Test(IJiraService jiraService)
+        {
+            var request = new InsightFieldValuesRequest(InsightObjectExtension.GetCustomFieldId<ReleaseTypeInsightObject>(f => f.CiClasses), true);
+            var allCiClasses = await jiraService.Schema.GetFieldValues(request);
+            var ciClasses = allCiClasses.Where(x => new string[] { "Banco", "Card" }.Contains(x.Name)).ToArray();
+            var obj = new ReleaseTypeInsightObject()
+            {
+                Name = new JiraInsightField.TextJiField { Value = "My Test" },
+                MustHaveRFC = new JiraInsightField.BoolJiField { Value = false},
+                CustomerFree = new JiraInsightField.BoolJiField { Value = true },
+                Category = new JiraInsightField.TextJiField { Value = "Client" },
+                CiClasses = new JiraInsightField.InsightArrayJiField() { Values = ciClasses }
+            };
+            string objectKey = await jiraService.Schema.CreateInsightObject(obj);
+            Assert.NotNull(objectKey);
+        }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task UpdateReleaseType_Test(IJiraService jiraService)
+        {
+            var request = new InsightFieldValuesRequest(InsightObjectExtension.GetCustomFieldId<ReleaseTypeInsightObject>(f => f.CiClasses), true);
+            var allCiClasses = await jiraService.Schema.GetFieldValues(request);
+            var ciClasses = allCiClasses.Where(x => new string[] { "Banco" }.Contains(x.Name)).ToArray();
+
+            var obj = new ReleaseTypeInsightObject()
+            {
+                ObjectKey = new JiraInsightField.TextJiField { Value = "CMDB-630991" },
+                Name = new JiraInsightField.TextJiField { Value = "My Test" },
+                MustHaveRFC = new JiraInsightField.BoolJiField { Value = false },
+                CustomerFree = new JiraInsightField.BoolJiField { Value = true },
+                Category = new JiraInsightField.TextJiField { Value = "Banco" },
+                CiClasses = new JiraInsightField.InsightArrayJiField() { Values = ciClasses }
+            };
+            string objectKey = await jiraService.Schema.UpdateInsightObject(obj);
+            Assert.NotNull(objectKey);
+        }
     }
 }
