@@ -11,7 +11,7 @@ namespace AtlassianAssistance.JiraService.Contracts
         Task<IEnumerable<CustomField>> GetCustomFields();
         Task<InsightField> GetKeyOfValueInInsightField(string customFieldId, string optionValue);
         Task<IEnumerable<T>> GetFieldValues<T>(CustomFieldValuesRequest<T> request);
-        Task<string> CreateInsightObject(InsightObject insighObject);
-        Task<string> UpdateInsightObject(InsightObject insighObject, string objectKeyValue);
+        Task<string> CreateInsightObject<T>(T insighObject) where T : InsightObject;
+        Task<string> UpdateInsightObject(InsightObject insighObject);
     }
 }

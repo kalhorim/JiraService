@@ -43,96 +43,48 @@ namespace AtlassianAssistance.JiraService.Services
             return await request.GetValues(_jiraClient);
         }
 
-        public async Task<string> CreateInsightObject(InsightObject insighObject)
+        public async Task<string> CreateInsightObject<T>(T insighObject)
+            where T : InsightObject
         {
-            var myObject = await GetInsightJsonObjectFromTypedObject(insighObject);
+            var myObject = MapToJsonInsightObject(insighObject);
             var result = await _jiraClient.RestClient
-                    .ExecuteRequestAsync(RestSharp.Method.POST, $"/rest/insight/1.0/object/create", myObject);
-            var objectKey = result["objectKey"].ToString();
-            return objectKey;
+                    .ExecuteRequestAsync<T>(RestSharp.Method.POST, $"/rest/insight/1.0/object/create", myObject);
+            
+            insighObject.ObjectKey = result.ObjectKey;
+            return result.ObjectKey.Value;
         }
 
-        public async Task<string> UpdateInsightObject(InsightObject insighObject, string objectKeyValue)
+        public async Task<string> UpdateInsightObject(InsightObject insighObject)
         {
-            var myObject = await GetInsightJsonObjectFromTypedObject(insighObject);
+            var objectKey = insighObject.ObjectKey.Value;
+            if (string.IsNullOrEmpty(objectKey))
+                throw new ArgumentNullException(nameof(insighObject.ObjectKey));
+
+            var myObject = MapToJsonInsightObject(insighObject);
             var result = await _jiraClient.RestClient
-                    .ExecuteRequestAsync(RestSharp.Method.PUT, $"/rest/insight/1.0/object/{objectKeyValue}", myObject);
-            var objectKey = result["objectKey"].ToString();
+                    .ExecuteRequestAsync(RestSharp.Method.PUT, $"/rest/insight/1.0/object/{objectKey}", myObject);
+            objectKey = result["objectKey"].ToString();
             return objectKey;
         }
         #endregion
 
         #region Private Methods
-        private async Task<dynamic> GetInsightJsonObjectFromTypedObject(InsightObject insighObject)
+        private object MapToJsonInsightObject(InsightObject insighObject)
         {
             var objAttributes = new List<InsightObjectAttribute>();
-            var objectType = insighObject.GetType();
 
-            var attr = objectType.GetCustomAttributes(typeof(InsightObjectTypeAttribute), false).FirstOrDefault() as InsightObjectTypeAttribute;
-            if (attr == null)
-                throw new InvalidOperationException("Current InsighObject type don't have InsightAttributeField Attribute");
-            var objectTypeId = attr.ObjectTypeId;
-
-            var objectProperties = objectType
-                    .GetProperties()
-                    .Where(x => x.CustomAttributes.Any(c => c.AttributeType == typeof(InsightAttributeFieldAttribute)))
-                    .ToList();
-
-            foreach (var prop in objectProperties)
+            var props = insighObject.GetInsightFields();
+            foreach (var item in props)
             {
-                var value = prop.GetValue(insighObject);
-                if (value == null)
-                    continue;
-
-                var attribute = await CreateObjectAttribute(prop, value);
-                objAttributes.Add(attribute);
+                objAttributes.Add(new InsightObjectAttribute()
+                {
+                    objectTypeAttributeId = item.Key,
+                    objectAttributeValues = item.Value.GetInsightJiraValue.Select(InsightObjectAttributeValue.Parse).ToArray()
+                });
             }
 
-            dynamic myObject = new { objectTypeId = objectTypeId, attributes = objAttributes.ToArray() };
+            object myObject = new { objectTypeId = insighObject.GetInsightObjectTypeId(), attributes = objAttributes.ToArray() };
             return myObject;
-        }
-
-        private async Task<InsightObjectAttribute> CreateObjectAttribute(System.Reflection.PropertyInfo prop, object value)
-        {
-            var attribute = new InsightObjectAttribute();
-            attribute.objectTypeAttributeId = (prop.GetCustomAttributes(typeof(InsightAttributeFieldAttribute), false).First() as InsightAttributeFieldAttribute).ObjectTypeAttributeId;
-
-            if (value is JiraCustomFieldBase customField)
-            {
-                var fieldTypeId = (prop.GetCustomAttributes(typeof(CustomFieldAttribute), false).First() as CustomFieldAttribute).FieldTypeId;
-                if (value is InsightObjectArrayJField arrayField)
-                {
-                    attribute.objectAttributeValues = arrayField.Values.Select(x => new InsightObjectAttributeValue(GetKeyOfValueInInsightField(fieldTypeId, x).Result.Key)).ToArray();
-                }
-                else if (value is InsightJField x)
-                {
-                    attribute.objectAttributeValues = new InsightObjectAttributeValue[] { new InsightObjectAttributeValue((await GetKeyOfValueInInsightField(fieldTypeId, x.GetJiraValue)).Key) };
-                }
-                else if (value is JiraCustomFieldBase o)
-                {
-                    attribute.objectAttributeValues = new InsightObjectAttributeValue[] { new InsightObjectAttributeValue(o.GetJiraValue) };
-                }
-                return attribute;
-            }
-
-            if (value is string val)
-            {
-                attribute.objectAttributeValues = new InsightObjectAttributeValue[] { new InsightObjectAttributeValue(val) };
-            }
-            else if (value is bool vl)
-            {
-                attribute.objectAttributeValues = new InsightObjectAttributeValue[] { new InsightObjectAttributeValue(vl.ToString().ToLower()) };
-            }
-            else if (value is IEnumerable<string> values)
-            {
-                attribute.objectAttributeValues = values.Select(x => new InsightObjectAttributeValue(x)).ToArray();
-            }
-            else if (value is string[] arrValues)
-            {
-                attribute.objectAttributeValues = arrValues.Select(x => new InsightObjectAttributeValue(x)).ToArray();
-            }
-
-            return attribute;
         }
         #endregion
     }

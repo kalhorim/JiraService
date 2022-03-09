@@ -1,5 +1,6 @@
 ﻿using AtlassianAssistance.JiraService.Attributes;
 using AtlassianAssistance.JiraService.JiraFields;
+using AtlassianAssistance.JiraService.JiraInsightField;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,22 +12,20 @@ namespace AtlassianAssistance.JiraService.Test.Model
     [InsightObjectType(884)]
     public class ReleaseTypeInsightObject : Models.InsightObject
     {
-        [InsightAttributeField(5483)]
-        public string ObjectKey { get; set; }
         [InsightAttributeField(5484)]
-        public string Name { get; set; }
+        public TextJiField Name { get; set; }
 
         [InsightAttributeField(5487)]
-        public string Category { get; set; }
+        public TextJiField Category { get; set; }
 
         [InsightAttributeField(5488)]
-        public bool? CustomerFree { get; set; }
+        public BoolJiField CustomerFree { get; set; }
 
         [InsightAttributeField(5489)]
-        public bool? MustHaveRFC { get; set; }
+        public BoolJiField MustHaveRFC { get; set; }
 
         [CustomField("CI-Class", "13")]
         [InsightAttributeField(5490)]
-        public InsightObjectArrayJField CiClasses { get; set; }
+        public InsightArrayJiField CiClasses { get; set; }
     }
 }

@@ -1,11 +1,37 @@
-﻿using System;
+﻿using AtlassianAssistance.JiraService.Attributes;
+using AtlassianAssistance.JiraService.JiraInsightField;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AtlassianAssistance.JiraService.Models
 {
     public abstract class InsightObject
     {
+        public TextJiField ObjectKey { get; set; }
+
+        internal int GetInsightObjectTypeId()
+        {
+            var attr = this.GetType().GetCustomAttributes(typeof(InsightObjectTypeAttribute), false).FirstOrDefault() as InsightObjectTypeAttribute;
+            if (attr == null)
+                throw new InvalidOperationException("Current InsighObject type don't have InsightAttributeField Attribute");
+           return attr.ObjectTypeId;
+            
+        }
+
+        internal IDictionary<int, JiraInsightFieldBase> GetInsightFields()
+        {
+            var objectProperties = this.GetType()
+                   .GetProperties()
+                   .Where(x => x.PropertyType.BaseType == typeof(JiraInsightFieldBase))
+                   .Where(x => x.CustomAttributes.Any(c => c.AttributeType == typeof(InsightAttributeFieldAttribute)))
+                   .ToList();
+
+            return objectProperties
+                .Select(x => new { Key = (x.GetCustomAttributes(typeof(InsightAttributeFieldAttribute), false).First() as InsightAttributeFieldAttribute).ObjectTypeAttributeId, Value = x.GetValue(this) as JiraInsightFieldBase })
+                .ToDictionary(x => x.Key, x => x.Value);
+        }
     }
 
     internal class InsightObjectAttribute
@@ -18,9 +44,10 @@ namespace AtlassianAssistance.JiraService.Models
     {
         public string value { get; set; }
 
-        public InsightObjectAttributeValue(string val)
+        public static InsightObjectAttributeValue Parse(string val)
         {
-            value = val;
+            return new InsightObjectAttributeValue() { value = val};
         }
+
     }
 }
