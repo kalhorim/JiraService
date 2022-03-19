@@ -35,6 +35,7 @@ namespace AtlassianAssistance.JiraService.Models
         public int Id { get; set; }
         public int TypeId { get; set; }
         public string TypeName { get; set; }
+        public IEnumerable<Object> Values { get; set; }
         public IEnumerable<string> DisplayValues { get; set; }
     }
 }

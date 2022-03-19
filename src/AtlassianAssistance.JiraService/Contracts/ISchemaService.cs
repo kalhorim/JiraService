@@ -8,6 +8,7 @@ namespace AtlassianAssistance.JiraService.Contracts
 {
     public interface ISchemaService
     {
+        Task<T> GetInsightObject<T>(string key) where T : InsightObject;
         Task<IEnumerable<CustomField>> GetCustomFields();
         Task<InsightField> GetKeyOfValueInInsightField(string customFieldId, string optionValue);
         Task<IEnumerable<T>> GetFieldValues<T>(CustomFieldValuesRequest<T> request);

@@ -137,5 +137,13 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
             string objectKey = await jiraService.Schema.UpdateInsightObject(obj);
             Assert.NotNull(objectKey);
         }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async Task GetInsightObject_Test(IJiraService jiraService)
+        {
+            var releaseType = await jiraService.Schema.GetInsightObject<ReleaseTypeInsightObject>("CMDB-442155");
+            Assert.NotNull(releaseType);
+        }
     }
 }

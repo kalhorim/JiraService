@@ -8,6 +8,6 @@ namespace AtlassianAssistance.JiraService.JiraInsightField
     public abstract class JiraInsightFieldBase
     {
         protected internal abstract string[] GetInsightJiraValue { get; }
-        //TODO:  for get data from server protected internal abstract string[] SetJiraValue { set; }
+        protected internal abstract void SetJiraValue(IEnumerable<object> value);
     }
 }

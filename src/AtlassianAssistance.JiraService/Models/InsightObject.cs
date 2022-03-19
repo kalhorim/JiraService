@@ -3,6 +3,7 @@ using AtlassianAssistance.JiraService.JiraInsightField;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace AtlassianAssistance.JiraService.Models
@@ -29,7 +30,28 @@ namespace AtlassianAssistance.JiraService.Models
                    .ToList();
 
             return objectProperties
-                .Select(x => new { Key = (x.GetCustomAttributes(typeof(InsightAttributeFieldAttribute), false).First() as InsightAttributeFieldAttribute).ObjectTypeAttributeId, Value = x.GetValue(this) as JiraInsightFieldBase })
+                .Select(x => new 
+                { 
+                    Key = (x.GetCustomAttributes(typeof(InsightAttributeFieldAttribute), false).First() as InsightAttributeFieldAttribute).ObjectTypeAttributeId,
+                    Value = x.GetValue(this) as JiraInsightFieldBase 
+                })
+                .ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        internal IDictionary<int, PropertyInfo> GetInsightProperties()
+        {
+            var objectProperties = this.GetType()
+                   .GetProperties()
+                   .Where(x => x.PropertyType.BaseType == typeof(JiraInsightFieldBase))
+                   .Where(x => x.CustomAttributes.Any(c => c.AttributeType == typeof(InsightAttributeFieldAttribute)))
+                   .ToList();
+
+            return objectProperties
+                .Select(x => new
+                {
+                    Key = (x.GetCustomAttributes(typeof(InsightAttributeFieldAttribute), false).First() as InsightAttributeFieldAttribute).ObjectTypeAttributeId,
+                    Value = x
+                })
                 .ToDictionary(x => x.Key, x => x.Value);
         }
     }

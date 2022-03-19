@@ -10,5 +10,14 @@ namespace AtlassianAssistance.JiraService.JiraInsightField
     {
         public InsightField[] Values { get; set; }
         protected internal override string[] GetInsightJiraValue => Values?.Select(x => x.Key)?.ToArray();
+        protected internal override void SetJiraValue(IEnumerable<object> value)
+        {
+            var values = new List<InsightField>();
+            foreach (var val in value)
+            {
+                values.Add(new InsightField() { Key = val?.ToString() });
+            }
+            Values = values.ToArray();
+        }
     }
 }

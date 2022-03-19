@@ -22,6 +22,39 @@ namespace AtlassianAssistance.JiraService.Services
         }
 
         #region Public Methods
+        public async Task<T> GetInsightObject<T>(string key)
+            where T: InsightObject
+        {
+            var obj = await _jiraClient.RestClient
+                    .ExecuteRequestAsync(RestSharp.Method.GET, $"/rest/insight/1.0/object/{key}");
+
+            var value = new InsightField
+            {
+                Id = (int)obj["id"],
+                Name = obj["label"].ToString(),
+                Key = obj["objectKey"].ToString(),
+                AttributesObject = obj["attributes"] == null ? null : JArray.Parse(obj["attributes"].ToString())
+            };
+
+            value.Attributes = value.AttributesObject?.Select(x =>
+                    new InsightFieldAttribute
+                    {
+                        Id = (int)x["id"],
+                        TypeId = (int)x["objectTypeAttribute"]["id"],
+                        TypeName = x["objectTypeAttribute"]["name"].ToString(),
+                        Values = JArray.Parse(x["objectAttributeValues"].ToString())
+                                                    .Select(p => p["value"]?.ToObject<object>())
+                                                    .ToArray(),
+                        DisplayValues = JArray.Parse(x["objectAttributeValues"].ToString())
+                                                    .Select(p => p["displayValue"]?.ToString())
+                                                    .ToArray()
+                    })
+                    ?.ToList();
+
+            var result = value.Map<T>();
+            return result;
+        }
+
         public async Task<IEnumerable<Models.CustomField>> GetCustomFields()
         {
             var customFields = (await _jiraClient.Fields.GetCustomFieldsAsync())
