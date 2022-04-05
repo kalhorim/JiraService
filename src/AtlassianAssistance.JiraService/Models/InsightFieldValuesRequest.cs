@@ -44,7 +44,8 @@ namespace AtlassianAssistance.JiraService.Models
                         Id = (int)x["id"],
                         Name = x["label"].ToString(),
                         Key = x["objectKey"].ToString(),
-                        AttributesObject = x["attributes"] == null ? null : JArray.Parse(x["attributes"].ToString())
+                        AttributesObject = x["attributes"] == null ? null : JArray.Parse(x["attributes"].ToString()),
+                        FieldTypeId = fieldTypeId
                     })
                     .ToList();
 

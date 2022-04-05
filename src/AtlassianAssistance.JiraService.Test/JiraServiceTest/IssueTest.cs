@@ -40,10 +40,12 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
                 Type = "service Request"
             };
 
+            var aa = await jiraService.Schema.GetKeyOfValueInInsightField("644", "QMB-SD( NOC )");
+
             issue.SetCustomField("Server",
                 new InsightJField
                 {
-                    Value = new InsightField { FieldTypeId = 664, Key = "SUP-443440" }
+                    Value = aa ?? new InsightField { FieldTypeId = "644", Key = "SUP-443440" }
                 });
 
             var key = await jiraService.Issue.Create(issue);
