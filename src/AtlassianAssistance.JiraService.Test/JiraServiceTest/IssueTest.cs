@@ -31,6 +31,29 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
 
         [Theory]
         [ClassData(typeof(JiraServiceProvider))]
+        public async void CreateSupportIssue_jiraService(IJiraService jiraService)
+        {
+            var issue = new IssueModel()
+            {
+                Summary = "My Test",
+                ProjectKey = "SUP",
+                Type = "service Request"
+            };
+
+            issue.SetCustomField("Server",
+                new InsightJField
+                {
+                    Value = new InsightField { FieldTypeId = 664, Key = "SUP-443440" }
+                });
+
+            var key = await jiraService.Issue.Create(issue);
+            Debug.WriteLine(key);
+            Assert.True(!string.IsNullOrEmpty(key));
+            await DeleteIssue(jiraService, key);
+        }
+
+        [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
         public async void UpdateIssue_jiraService(IJiraService jiraService)
         {
             var summary = " Update";
