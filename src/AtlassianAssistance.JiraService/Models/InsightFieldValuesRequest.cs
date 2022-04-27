@@ -60,7 +60,7 @@ namespace AtlassianAssistance.JiraService.Models
                                 TypeId = (int)x["objectTypeAttribute"]["id"],
                                 TypeName = x["objectTypeAttribute"]["name"].ToString(),
                                 Values = JArray.Parse(x["objectAttributeValues"].ToString())
-                                                            .Select(p => p["value"].ToObject<object>())
+                                                            .Select(p => p["value"]?.ToObject<object>())
                                                             .ToArray(),
                                 DisplayValues = JArray.Parse(x["objectAttributeValues"].ToString())
                                                             .Select(p => p["displayValue"].ToString())
