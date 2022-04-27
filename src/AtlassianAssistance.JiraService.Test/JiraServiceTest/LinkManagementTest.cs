@@ -55,6 +55,19 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
 
         [Theory]
         [ClassData(typeof(IssuesDataset))]
+        public async void RemoveLink_jiraService(IJiraService jiraService, string key)
+        {
+            var newkey = await jiraService.Issue.Create(ChangeIssueInitializer.ChangeIssue.AddCustomFields());
+            await jiraService.LinkManagement.Link(key, newkey, JiraLinkTypes.Duplicate);
+
+            var exec = await jiraService.LinkManagement.RemoveLink(key, newkey, JiraLinkTypes.Duplicate);
+
+            Assert.True(exec);
+            await DeleteIssue(jiraService, newkey);
+        }
+
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
         public async void CustomLink_jiraService(IJiraService jiraService, string key)
         {
             var newkey = await jiraService.Issue.Create(ChangeIssueInitializer.ChangeIssue.AddCustomFields());
