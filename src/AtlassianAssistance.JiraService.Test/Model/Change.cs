@@ -65,7 +65,7 @@ namespace AtlassianAssistance.JiraService.Test.Model
         public HyperLinkJField RFCNumber { get; set; }
 
         [CustomField("Case Number", defaultVal: "http://api/View/Tools/EntityDirect.aspx?etc=112&no={0}")]
-        public HyperLinkJField CaseNumber { get; set; }
+        public HyperLinkArrayJField CaseNumbers { get; set; }
 
         [CustomField("Primary Customer")] public CascadeSelectOptionJField PrimaryCustomer { get; set; }
 
@@ -81,13 +81,13 @@ namespace AtlassianAssistance.JiraService.Test.Model
 
         [CustomField("Internal Letter Number",
             defaultVal: "http://api/View/Tools/EntityDirect.aspx?etc=4207&no={0}")]
-        public HyperLinkJField LetterNumbers { get; set; }
+        public HyperLinkArrayJField LetterNumbers { get; set; }
 
         [CustomField("Ticket Number", defaultVal: "http://api/View/Tools/EntityDirect.aspx?etc=10292&no={0}")]
-        public HyperLinkJField TicketNumbers { get; set; }
+        public HyperLinkArrayJField TicketNumbers { get; set; }
 
         [CustomField("Release CRM", defaultVal: "http://api/View/Tools/EntityDirect.aspx?etc=10023&no={0}")]
-        public HyperLinkJField CrmReleases { get; set; }
+        public HyperLinkArrayJField CrmReleases { get; set; }
 
         [CustomField("Epic Link")]
         public EpicLinkJField EpicLink { get; set; }

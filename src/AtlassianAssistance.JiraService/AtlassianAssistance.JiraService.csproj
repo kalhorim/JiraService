@@ -5,7 +5,7 @@
     <SccProvider>SAK</SccProvider>
     <SccAuxPath>SAK</SccAuxPath>
     <SccLocalPath>SAK</SccLocalPath>
-    <PackageVersion>0.0.19</PackageVersion>
+    <PackageVersion>0.0.20</PackageVersion>
     <Title>Extension on Atlassian.SDK</Title>
     <PackageProjectUrl>https://github.com/kalhorim/JiraService</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/kalhorim/JiraService</PackageLicenseUrl>
@@ -21,9 +21,9 @@
     <PackageTags>jira, atlassian, sdk, extension</PackageTags>
     <PackageReleaseNotes>Add Remove Method to Issue Link Service</PackageReleaseNotes>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <AssemblyVersion>0.0.19</AssemblyVersion>
-    <FileVersion>0.0.19</FileVersion>
-    <Version>0.0.19</Version>
+    <AssemblyVersion>0.0.20</AssemblyVersion>
+    <FileVersion>0.0.20</FileVersion>
+    <Version>0.0.20</Version>
   </PropertyGroup>
 
   <ItemGroup>
