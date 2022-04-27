@@ -64,21 +64,24 @@ namespace AtlassianAssistance.JiraService.Services
 
         }
 
-        public async Task<bool> RemoveLink(string fromIssueKey, string toIssueKey, JiraLinkType linkType, CancellationToken token = default)
+        public async Task<bool> RemoveLink(string fromIssueKey, string toIssueKey, JiraLinkType linkType = null, CancellationToken token = default)
         {
             var links = await GetLinksForIssue(fromIssueKey, token);
-            var linkId = links.FirstOrDefault(l =>
+            var foundLinks = links.Where(l =>
                     (l.InwardIssueKey == toIssueKey || l.OutwardIssueKey == toIssueKey) &&
-                    (l.InwardIssueKey == fromIssueKey || l.OutwardIssueKey == fromIssueKey) &&
-                    l.LinkType.Name == linkType.Name)
-                ?.LinkId;
+                    (l.InwardIssueKey == fromIssueKey || l.OutwardIssueKey == fromIssueKey));
+            if (linkType != null)
+                foundLinks = foundLinks.Where(l => l.LinkType.Name == linkType.Name);
 
-            if (linkId == null)
-                return false;
+            foreach (var link in foundLinks)
+            {
+                var linkId = link.LinkId;
 
-            var resource = String.Format("/rest/api/2/issueLink/{0}", linkId);
-            var result = await _jiraClient.RestClient.ExecuteRequestAsync(Method.DELETE, resource, null, token).ConfigureAwait(false);
-            return true;
+                var resource = String.Format("/rest/api/2/issueLink/{0}", linkId);
+                var result = await _jiraClient.RestClient.ExecuteRequestAsync(Method.DELETE, resource, null, token).ConfigureAwait(false);
+            }
+
+            return foundLinks.Any();
 
         }
 
