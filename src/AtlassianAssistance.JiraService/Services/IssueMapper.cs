@@ -29,7 +29,7 @@ namespace AtlassianAssistance.JiraService.Services
             var issueModelCustomfields = issueModel.AsDictionary();
             issue.CustomFields.ToList().ForEach(cf =>
             {
-                var issueShema = issueModelCustomfields.SingleOrDefault(s => s.Value.customFieldAttribute.Equals(cf));
+                var issueShema = issueModelCustomfields.FirstOrDefault(s => s.Value.customFieldAttribute.Equals(cf));
                 if (issueShema.Key != null)
                 {
                     if (issueShema.Value.jiraCustomField == null)
