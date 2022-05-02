@@ -11,5 +11,6 @@ namespace AtlassianAssistance.JiraService.Contracts
         Task<IEnumerable<T>> GetLinks<T>(string issueKey, JiraLinkType linkType, CancellationToken token = default) where T : IssueModel;
         Task<bool> Link(string fromIssueKey, string toIssueKey, JiraLinkType linkType, CancellationToken token = default);
         Task<bool> RemoveLink(string fromIssueKey, string toIssueKey, JiraLinkType linkType = null, CancellationToken token = default);
+        Task<IEnumerable<JiraLinkType>> GetLinkTypes(CancellationToken token = default);
     }
 }

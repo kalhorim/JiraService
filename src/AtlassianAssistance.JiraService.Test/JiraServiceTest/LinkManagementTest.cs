@@ -18,6 +18,14 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
     public class LinkManagementTest
     {
         [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public async void CreateSupportIssue_jiraService(IJiraService jiraService)
+        {
+            var linkTypes = await jiraService.LinkManagement.GetLinkTypes();
+            Assert.True(linkTypes.Any());
+        }
+
+        [Theory]
         [ClassData(typeof(IssuesDataset))]
         public async void GetLink_jiraService(IJiraService jiraService, string key)
         {

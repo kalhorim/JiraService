@@ -130,6 +130,17 @@ namespace AtlassianAssistance.JiraService.Services
             });
         }
 
+        public async Task<IEnumerable<JiraLinkType>> GetLinkTypes(CancellationToken token = default)
+        {
+            var types = await _jiraClient.Links.GetLinkTypesAsync(token);
+            return types.Select(x => new JiraLinkType()
+            {
+                Name = x.Name,
+                InwardDescription = x.Inward,
+                OutwardDescription = x.Outward,
+            });
+        }
+
         #endregion
     }
 }
