@@ -136,6 +136,21 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         }
 
         [Theory]
+        [ClassData(typeof(JiraServiceProvider))]
+        public void GetIssuesPaging_jiraService(IJiraService jiraService)
+        {
+            var startAt = 0;
+            var maxIssuesPerRequest = 10;
+            var issues = jiraService.Issue.Query<ChangeIssue>("summary ~ \"تست\"", startAt, maxIssuesPerRequest).ToList();
+            Assert.All(issues, a =>
+            {
+                Assert.True(issues.Count() <= maxIssuesPerRequest);
+                Assert.NotNull(a.Key);
+                Assert.Contains("تست", a.Summary);
+            });
+        }
+
+        [Theory]
         [ClassData(typeof(IssuesDataset))]
         public async void AddTrackingTime_jiraService(IJiraService jiraService, string key)
         {
