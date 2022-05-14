@@ -23,7 +23,10 @@ namespace AtlassianAssistance.JiraService.JiraFields
             {
                 var data = value.Split('|');
                 if (data.Length != 2 || !data[0].StartsWith("[") || !data[1].EndsWith("]"))
-                    throw CastException(value);
+                {
+                    continue;
+                }
+
                 var val = data[0].Substring(1, data[0].Length - 1);
                 var link = new Uri(data[1].Substring(0, data[1].Length - 1));
 
