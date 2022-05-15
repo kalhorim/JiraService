@@ -17,7 +17,7 @@ namespace AtlassianAssistance.JiraService.Contracts
         Task<T> Get<T>(string issueKey, CancellationToken token = default) where T : IssueModel;
         Task<IEnumerable<T>> Get<T>(IEnumerable<string> keys, CancellationToken token = default) where T : IssueModel;
         IEnumerable<T> Query<T>(string jql) where T : IssueModel;
-        IEnumerable<T> Query<T>(string jql, int startAt = 0, int maxIssuesPerRequest = 20) where T : IssueModel;
+        IssueQueryResponse<T> Query<T>(IssueQueryRequest request) where T : IssueModel;
         Task<bool> Update<T>(T issueModel) where T : IssueModel;
         Task Delete(string issueKey, CancellationToken token = default);
     }

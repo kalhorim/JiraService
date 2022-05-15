@@ -139,12 +139,17 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
         [ClassData(typeof(JiraServiceProvider))]
         public void GetIssuesPaging_jiraService(IJiraService jiraService)
         {
-            var startAt = 0;
-            var maxIssuesPerRequest = 10;
-            var issues = jiraService.Issue.Query<ChangeIssue>("summary ~ \"تست\"", startAt, maxIssuesPerRequest).ToList();
-            Assert.All(issues, a =>
+            var request = new IssueQueryRequest
             {
-                Assert.True(issues.Count() <= maxIssuesPerRequest);
+                Jql = "summary ~ \"تست\"",
+                MaxIssuesPerRequest = 10,
+                StartAt = 0
+            };
+
+            var response = jiraService.Issue.Query<ChangeIssue>(request);
+            Assert.All(response.Result, a =>
+            {
+                Assert.True(response.Result.Count() <= request.MaxIssuesPerRequest);
                 Assert.NotNull(a.Key);
                 Assert.Contains("تست", a.Summary);
             });

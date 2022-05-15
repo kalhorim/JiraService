@@ -65,19 +65,23 @@ namespace AtlassianAssistance.JiraService.Services
             while (fetchedAny);
         }
 
-        public IEnumerable<T> Query<T>(string jql, int startAt = 0, int maxIssuesPerRequest = 20) where T : IssueModel
+        public IssueQueryResponse<T> Query<T>(IssueQueryRequest request) where T : IssueModel
         {
-            var options = new IssueSearchOptions(jql)
+            var options = new IssueSearchOptions(request.Jql)
             {
                 FetchBasicFields = false,
-                MaxIssuesPerRequest = maxIssuesPerRequest,
+                MaxIssuesPerRequest = request.MaxIssuesPerRequest,
             };
-
+            
             _logger.LogInformation("Get issues starting ...");
-            options.StartAt = startAt;
+            options.StartAt = request.StartAt;
             var issues = _jiraClient.Issues.GetIssuesFromJqlAsync(options).Result;
-            foreach (var issue in issues)
-                yield return IssueMapper.Map<T>(issue);
+
+            var response = new IssueQueryResponse<T>();
+            response.Total = issues.TotalItems;
+            response.Result = issues.Select(IssueMapper.Map<T>);
+
+            return response;
         }
 
         public async Task<IEnumerable<HistoryField>> GetHistory(string issueKey, string fieldName, CancellationToken token = default)
