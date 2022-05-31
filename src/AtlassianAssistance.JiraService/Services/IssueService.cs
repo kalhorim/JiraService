@@ -14,8 +14,6 @@ namespace AtlassianAssistance.JiraService.Services
 {
     internal class IssueService: Contracts.IIssueService
     {
-        public ICommentService Comment { get; set; }
-
         private readonly Jira _jiraClient;
         private readonly ILogger _logger;
         private readonly CommentService _commentService;

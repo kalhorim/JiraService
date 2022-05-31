@@ -7,8 +7,6 @@ namespace AtlassianAssistance.JiraService.Contracts
 {
     public interface IIssueService
     {
-        ICommentService Comment { get; set; }
-
         Task SetTrackingTime(string issueKey, string originalEstimate, string remainingEstimate, CancellationToken token = default);
         Task<LogWork> SetLogWork(string issueKey, LogWork logWork, string updateUser = "", CancellationToken token = default);
         Task<IEnumerable<HistoryField>> GetHistory(string issueKey, string fieldName, CancellationToken token = default);
