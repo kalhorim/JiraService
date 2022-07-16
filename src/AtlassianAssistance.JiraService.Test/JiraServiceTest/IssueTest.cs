@@ -184,6 +184,16 @@ namespace AtlassianAssistance.JiraService.Test.JiraServiceTest
             Assert.True(issue.Customer.Value.Name != null);
         }
 
+        [Theory]
+        [ClassData(typeof(IssuesDataset))]
+        public async void Assign_jiraService(IJiraService jiraService, string key)
+        {
+            var newAssignee = "OP-Planning";
+            await jiraService.Issue.ChangeAssignee(key, newAssignee);
+            var issue = await jiraService.Issue.Get<ChangeIssue>(key);
+            Assert.True(issue.Assignee == newAssignee);
+        }
+
         private static async Task DeleteIssue(IJiraService jiraService, string key)
         {
             await jiraService.Issue.Delete(key);

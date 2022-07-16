@@ -154,6 +154,11 @@ namespace AtlassianAssistance.JiraService.Services
             return result;
         }
 
+        public async Task ChangeAssignee(string issueKey, string assignee, CancellationToken token = default)
+        {
+            await _jiraClient.Issues.AssignIssueAsync(issueKey, assignee, token);
+        }
+
         public async Task ChangeStatus(string issueKey, string newStatus, string newResolution = default, CancellationToken token = default)
         {
             var issue = await _jiraClient.Issues.GetIssueAsync(issueKey);

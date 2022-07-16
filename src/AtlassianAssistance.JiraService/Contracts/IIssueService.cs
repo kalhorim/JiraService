@@ -10,6 +10,7 @@ namespace AtlassianAssistance.JiraService.Contracts
         Task SetTrackingTime(string issueKey, string originalEstimate, string remainingEstimate, CancellationToken token = default);
         Task<LogWork> SetLogWork(string issueKey, LogWork logWork, string updateUser = "", CancellationToken token = default);
         Task<IEnumerable<HistoryField>> GetHistory(string issueKey, string fieldName, CancellationToken token = default);
+        Task ChangeAssignee(string issueKey, string assignee, CancellationToken token = default);
         Task ChangeStatus(string issueKey, string newStatus, string newResolution = null, CancellationToken token = default);
         Task<string> Create(IssueModel IssueModel, string parentIssueKey = null, CancellationToken token = default);
         Task<T> Get<T>(string issueKey, CancellationToken token = default) where T : IssueModel;
