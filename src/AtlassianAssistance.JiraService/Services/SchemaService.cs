@@ -112,7 +112,8 @@ namespace AtlassianAssistance.JiraService.Services
                 objAttributes.Add(new InsightObjectAttribute()
                 {
                     objectTypeAttributeId = item.Key,
-                    objectAttributeValues = item.Value.GetInsightJiraValue.Select(InsightObjectAttributeValue.Parse).ToArray()
+                    objectAttributeValues = item.Value?.GetInsightJiraValue == null ? null : 
+                    item.Value.GetInsightJiraValue.Select(InsightObjectAttributeValue.Parse).ToArray()
                 });
             }
 
